@@ -92,71 +92,83 @@ def depthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     
 
-    #return ['West','West','West','West','South','South',"East",'South','South','West']
     
-    frontera = util.Stack()
-    frontera.push(((problem.getStartState(),"",0),[]))
     nodo = problem.getStartState()
+    frontera = util.Stack()
+    #frontera.push(((problem.getStartState(),"",0),[]))
+    frontera.push((nodo,[]))
+    
     cerrados = []
     list_f = []
     
     i = 0
-    j = 0
+    
     salir = True
 
-    y = []
-    #print "Succesores:" , problem.getSuccessors((25,16))
-    #MIRAR DE SOLO IR AL POR EL PRIMERO
-    print "\n\nStart:", problem.getStartState()
+    x = []
+    
+    #print "\n\nStart:", problem.getStartState()
     while (salir):
-        #print (j)
+        
         elemento = frontera.pop()
         
-        nodo = elemento[0][0]
-        posicion = elemento[0][1]
-        coste = elemento[0][2]
+        nodo = elemento[0]        
         list_position = elemento[1]
-        x = list_position[:]
         
+        x = list(list_position)
         
-        #print "len: \t", nodo,"\n"
-        #Pensar como se guardan
-        #print j, "list:", list_position, nodo
-        for i in range(len(problem.getSuccessors(nodo))):
-            if (problem.getSuccessors(nodo)[i][0] not in cerrados):
-                #print j,  elemento[1]
-                #if(nodo == problem.getStartState()):
-                    
-                list_position.append(problem.getSuccessors(nodo)[i][1])                
-                frontera.push((problem.getSuccessors(nodo)[i],list_position))
-                #
-                print j, elemento[1] , nodo
-                list_position = x
-
-       
-        #El motivo es el retrocezo como estos ya estan listos en cerrados solo añade y en cambio cuando encuetra otro camino reinicia la lista.
-        #print "y:", y
         if (problem.isGoalState(nodo)):
             salir = False
             list_f = list_position
         
-        print j, elemento[1] , nodo
-        cerrados.append(nodo)
-        #list_position = []
-       
-        j+=1  
+        if (nodo not in cerrados):
+            cerrados.append(nodo)
+            
+            for i in problem.getSuccessors(nodo):
+                if (i[0] not in cerrados):
+                    
+                        
+                                  
+                    frontera.push((i[0],list_position+[i[1]] ))
+                    #print (i[0],list_position)
+                    
+                    #list_position = x
+            
+            
     
-     
-    
-    return list_f#['South','South','West','South','West','West','South']#,'West']
-    #return ['West','West','West','West','West','West','West','West','West']
-    #return ['South','South','West','South','West','West','South','West']   
+    return list_f
     util.raiseNotDefined()
     
         
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    
+    nodo = problem.getStartState()
+    frontera = util.Queue()
+    cerrados = []
+    frontera.push((nodo,[]))
+    salir = True
+    
+    while(salir):
+        elemento = frontera.pop()
+        nodo = elemento[0]
+        list_position = elemento[1]  
+        
+        if (problem.isGoalState(nodo)):
+            salir = False
+            list_f = list_position
+    
+        if (nodo not in cerrados):
+            cerrados.append(nodo)
+        
+        for i in problem.getSuccessors(nodo):
+            if (i[0] not in cerrados):
+                frontera.push((i[0],list_position+[i[1]] ))
+                
+    return list_f
+    
+    
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
@@ -174,6 +186,11 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    actual = searchAgent(problem.getStartState(),problem)
+    print (problem.getStartState(), heuristic)
+    # Posicion actualy posicion final
+    #SearchAgent.py Aqui esta la distancia manhatam mirar como funciona
+    
     util.raiseNotDefined()
 
 
