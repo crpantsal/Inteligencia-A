@@ -21,7 +21,7 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
-
+import searchAgents
 class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
@@ -115,7 +115,6 @@ def depthFirstSearch(problem):
         nodo = elemento[0]        
         list_position = elemento[1]
         
-        x = list(list_position)
         
         if (problem.isGoalState(nodo)):
             salir = False
@@ -186,10 +185,29 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    actual = searchAgent(problem.getStartState(),problem)
-    print (problem.getStartState(), heuristic)
+    #actual = searchAgents.manhattanHeuristic(problem.getStartState(),problem)
+    #Guardar coste , nodo , posicion 
+    #Entender cola de prioridades.
+    #Busqueda es en bfs
+    # Lo podemos insetar com multiples prioridades.
+    frontera = util.PriorityQueue()
+    frontera.push(problem.getStartState(),2)
+    frontera.push((8,8),1000)
+    #frontera.push(0,0,(3,3))
+    cerrados = []
+    salir = True
+    
+    elemento = frontera.pop()
+    print elemento
+    #while(salir):
+        
+        
+        
+        
+    #print (problem.getStartState(), actual)
     # Posicion actualy posicion final
     #SearchAgent.py Aqui esta la distancia manhatam mirar como funciona
+    return ["East"]
     
     util.raiseNotDefined()
 
