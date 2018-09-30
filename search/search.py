@@ -22,7 +22,10 @@ Pacman agents (in searchAgents.py).
 
 import util
 import searchAgents
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2122f0523348585f6d0f2d07841f58f419eea149
 class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
@@ -106,6 +109,7 @@ def depthFirstSearch(problem):
                 
         if (problem.isGoalState(nodo)):            
             return list_position
+
         
         if (nodo not in cerrados):
             cerrados.append(nodo)            
@@ -114,8 +118,7 @@ def depthFirstSearch(problem):
                     frontera.push((i[0],list_position+[i[1]]))
   
             
-    
-    #return list_f
+
     util.raiseNotDefined()
     
         
@@ -161,6 +164,7 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+
     
 
     frontera = util.PriorityQueue()
@@ -188,6 +192,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 b = direccion+[i[1]]
                 cota = actual+coste_a    
                 frontera.push((i[0],b,coste_a),cota)
+
 
 
     
