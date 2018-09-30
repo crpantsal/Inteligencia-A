@@ -21,6 +21,7 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
+import searchAgents
 
 class SearchProblem:
     """
@@ -95,48 +96,26 @@ def depthFirstSearch(problem):
     
     nodo = problem.getStartState()
     frontera = util.Stack()
-    #frontera.push(((problem.getStartState(),"",0),[]))
-    frontera.push((nodo,[]))
-    
+    frontera.push((nodo,[]))    
     cerrados = []
-    list_f = []
-    
-    i = 0
-    
-    salir = True
-
-    x = []
-    
-    #print "\n\nStart:", problem.getStartState()
-    while (salir):
-        
+ 
+    while (not frontera.isEmpty()):
         elemento = frontera.pop()
-        
         nodo = elemento[0]        
         list_position = elemento[1]
-        
-        x = list(list_position)
-        
-        if (problem.isGoalState(nodo)):
-            salir = False
-            list_f = list_position
+                
+        if (problem.isGoalState(nodo)):            
+            return list_position
         
         if (nodo not in cerrados):
-            cerrados.append(nodo)
-            
+            cerrados.append(nodo)            
             for i in problem.getSuccessors(nodo):
-                if (i[0] not in cerrados):
-                    
-                        
-                                  
-                    frontera.push((i[0],list_position+[i[1]] ))
-                    #print (i[0],list_position)
-                    
-                    #list_position = x
-            
+                if (i[0] not in cerrados):                       
+                    frontera.push((i[0],list_position+[i[1]]))
+  
             
     
-    return list_f
+    #return list_f
     util.raiseNotDefined()
     
         
@@ -148,25 +127,21 @@ def breadthFirstSearch(problem):
     frontera = util.Queue()
     cerrados = []
     frontera.push((nodo,[]))
-    salir = True
     
-    while(salir):
+    while(not frontera.isEmpty()):
         elemento = frontera.pop()
         nodo = elemento[0]
         list_position = elemento[1]  
         
-        if (problem.isGoalState(nodo)):
-            salir = False
-            list_f = list_position
+        if (problem.isGoalState(nodo)):            
+            return list_position
     
         if (nodo not in cerrados):
-            cerrados.append(nodo)
-        
-        for i in problem.getSuccessors(nodo):
-            if (i[0] not in cerrados):
-                frontera.push((i[0],list_position+[i[1]] ))
+            cerrados.append(nodo)        
+            for i in problem.getSuccessors(nodo):
+                if (i[0] not in cerrados):
+                    frontera.push((i[0],list_position+[i[1]] ))
                 
-    return list_f
     
     
     util.raiseNotDefined()
@@ -186,10 +161,35 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    actual = searchAgent(problem.getStartState(),problem)
-    print (problem.getStartState(), heuristic)
-    # Posicion actualy posicion final
-    #SearchAgent.py Aqui esta la distancia manhatam mirar como funciona
+    
+
+    frontera = util.PriorityQueue()
+    nodo = problem.getStartState()
+    frontera.push((nodo,[],0 ),1)
+
+    cerrados = []
+
+    while(not frontera.isEmpty()):
+        element = frontera.pop()
+        nodo = element[0]
+        direccion = element[1]
+        coste = element[2]
+
+        if(problem.isGoalState(nodo)):
+            return direccion
+        
+        if (nodo not in cerrados):
+            cerrados.append(nodo)
+            
+            for i in problem.getSuccessors(nodo):              
+                #if (i[0] not in cerrados):                    
+                actual = searchAgents.manhattanHeuristic(i[0],problem)
+                coste_a = coste+i[2]
+                b = direccion+[i[1]]
+                cota = actual+coste_a    
+                frontera.push((i[0],b,coste_a),cota)
+
+
     
     util.raiseNotDefined()
 
