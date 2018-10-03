@@ -204,7 +204,7 @@ class PositionSearchProblem(search.SearchProblem):
                 nextState = (nextx, nexty)
                 cost = self.costFn(nextState)
                 successors.append( ( nextState, action, cost) )
-
+                #print successors #Quitar este print
         # Bookkeeping for display purposes
         self._expanded += 1 # DO NOT CHANGE
         if state not in self._visited:
@@ -291,8 +291,7 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
-        self.all_corners = 0
-        
+
 
     def getStartState(self):
         """
@@ -300,8 +299,9 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        return self.startingPosition
-        util.raiseNotDefined()
+        return (self.startingPosition,[])
+        #return self.startingPosition
+
 
     def isGoalState(self, state):
         """
@@ -316,11 +316,15 @@ class CornersProblem(search.SearchProblem):
                 if 'drawExpandedCells' in dir(__main__._display): #@UndefinedVariable
                     __main__._display.drawExpandedCells(self._visitedlist) #@UndefinedVariable
         return isGoal"""
-        if (state in self.corners):
+        
+        """if (state in self.corners):
             self.all_corners += 1
-        return self.all_corners == 4
+        return self.all_corners == 4"""
+        
+        print ("test",state)
+        return len(state[1]) == len(self.corners)
     
-        util.raiseNotDefined()
+        
 
     def getSuccessors(self, state):
         """
@@ -332,7 +336,9 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
-
+        nodo, lista = state
+        print("state",state)
+        print("lis",lista)
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
@@ -343,14 +349,29 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
-            x,y = state
+            x,y = nodo
+            #print (x,y)
             dx, dy = Actions.directionToVector(action)
+            nueva_lista =list(lista)
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
                 nextState = (nextx, nexty)
                 #cost = self.costFn(nextState)
-                successors.append( ( nextState, action))#, cost) )
+                #successors.append((nextState, action))#, cost) )
+
+                if (nextState in self.corners and nextState not in nueva_lista):
+                   nueva_lista.append(nextState)
+                print ("Nueva Lista", nueva_lista)
+                new_node=(nextState,nueva_lista)
+                successors.append((new_node,action,1))
+            #successors.append(self.aux)
+            #print successors
+                
+                
         self._expanded += 1 # DO NOT CHANGE
+        print (successors)
+        
+        
         return successors
 
     def getCostOfActions(self, actions):
