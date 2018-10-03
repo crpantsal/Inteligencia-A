@@ -291,6 +291,8 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
+        self.all_corners = 0
+        
 
     def getStartState(self):
         """
@@ -298,13 +300,26 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
+        return self.startingPosition
         util.raiseNotDefined()
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        "*** YOUR CODE HERE ***"
+        "*** YOUR CODE HERE ***"#Mirar al completar el juego
+        """isGoal = state == self.corners
+        if isGoal and self.visualize:
+            self._visitedlist.append(state)
+            import __main__
+            if '_display' in dir(__main__):
+                if 'drawExpandedCells' in dir(__main__._display): #@UndefinedVariable
+                    __main__._display.drawExpandedCells(self._visitedlist) #@UndefinedVariable
+        return isGoal"""
+        if (state in self.corners):
+            self.all_corners += 1
+        return self.all_corners == 4
+    
         util.raiseNotDefined()
 
     def getSuccessors(self, state):
@@ -328,7 +343,13 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
-
+            x,y = state
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            if not self.walls[nextx][nexty]:
+                nextState = (nextx, nexty)
+                #cost = self.costFn(nextState)
+                successors.append( ( nextState, action))#, cost) )
         self._expanded += 1 # DO NOT CHANGE
         return successors
 

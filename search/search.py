@@ -22,10 +22,7 @@ Pacman agents (in searchAgents.py).
 
 import util
 import searchAgents
-<<<<<<< HEAD
 
-=======
->>>>>>> 2122f0523348585f6d0f2d07841f58f419eea149
 class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
