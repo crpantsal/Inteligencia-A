@@ -21,7 +21,7 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
-import searchAgents
+
 
 class SearchProblem:
     """
@@ -92,7 +92,7 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
     
-
+    #print problem.corners
     
     nodo = problem.getStartState()
     frontera = util.Stack()
@@ -140,7 +140,7 @@ def breadthFirstSearch(problem):
             cerrados.append(nodo)        
             for i in problem.getSuccessors(nodo):
                 if (i[0] not in cerrados):
-                    frontera.push((i[0],list_position+[i[1]] ))
+                    frontera.push((i[0],list_position+[i[1]]))
                 
     
     
@@ -166,8 +166,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
     frontera = util.PriorityQueue()
     nodo = problem.getStartState()
-    frontera.push((nodo,[],0 ),1)
-
+    frontera.push((nodo,[],0),1)
     cerrados = []
 
     while(not frontera.isEmpty()):
@@ -175,7 +174,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         nodo = element[0]
         direccion = element[1]
         coste = element[2]
-
+        #print coste,nodo
         if(problem.isGoalState(nodo)):
             return direccion
         
@@ -183,8 +182,11 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             cerrados.append(nodo)
             
             for i in problem.getSuccessors(nodo):              
-                #if (i[0] not in cerrados):                    
-                actual = searchAgents.manhattanHeuristic(i[0],problem)
+                #if (i[0] not in cerrados):      
+                #print problem.goal
+                #print heuristic(nodo,problem)
+                #actual = searchAgents.manhattanHeuristic(i[0],problem)
+                actual = heuristic(i[0],problem)
                 coste_a = coste+i[2]
                 b = direccion+[i[1]]
                 cota = actual+coste_a    

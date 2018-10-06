@@ -321,7 +321,7 @@ class CornersProblem(search.SearchProblem):
             self.all_corners += 1
         return self.all_corners == 4"""
         
-        print ("test",state)
+        #print ("test",state)
         return len(state[1]) == len(self.corners)
     
         
@@ -337,8 +337,8 @@ class CornersProblem(search.SearchProblem):
             is the incremental cost of expanding to that successor
         """
         nodo, lista = state
-        print("state",state)
-        print("lis",lista)
+        #print("state",state)
+        #print("lis",lista)
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
@@ -361,7 +361,7 @@ class CornersProblem(search.SearchProblem):
 
                 if (nextState in self.corners and nextState not in nueva_lista):
                    nueva_lista.append(nextState)
-                print ("Nueva Lista", nueva_lista)
+                #print ("Nueva Lista", nueva_lista)
                 new_node=(nextState,nueva_lista)
                 successors.append((new_node,action,1))
             #successors.append(self.aux)
@@ -369,7 +369,7 @@ class CornersProblem(search.SearchProblem):
                 
                 
         self._expanded += 1 # DO NOT CHANGE
-        print (successors)
+        #print (successors)
         
         
         return successors
@@ -405,7 +405,20 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    _max = 0
+    #print state[0], walls
+    xy1 = state[0]
+    xy2 = corners[0]
+    for i in corners:
+        if (i not in state[1]):
+            calculo = abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
+            if (_max < calculo):
+                _max = calculo
+    print _max
+    return _max
+    
+    
+    #return 0 # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
