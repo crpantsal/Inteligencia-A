@@ -576,11 +576,7 @@ def foodHeuristic(state, problem):
     _max = 0
     counter = 0
     position, foodGrid = state
-    #print "Walls", problem.walls.count()
-    #print problem._expanded
-    #print foodGrid
-    #print foodGrid.asList()
-    #print len(foodGrid[0])
+ 
     for a in foodGrid:
      #   print "Len:",len(a), "counter", counter , a
         counter+=1
@@ -595,66 +591,43 @@ def foodHeuristic(state, problem):
         
     #print ("Num",x1)
     alfa = np.array(x1,dtype='uint8')
-    print (alfa.T)
-    print foodGrid.asList()[0], position
-    print alfa[1:10+1,1:3+1]
+  
+    
     copyalfa = (alfa[1:10+1,1:3+1]).copy()
-    print "Cop",copyalfa
-    delta =  copyalfa[:,:] == 1
-    print "Delta",delta
-    #alfa[alfa[1:10+1,1:3+1]] == 1
-    #print delta
-    #print beta.T
+
+    #delta =  copyalfa[:,:] == 1
+    delta1 = copyalfa[(copyalfa == 1)]
+
     g = []
     cnt = 0
+    valor = 0
     #print x
     for food in foodGrid.asList():
-        #print foodGrid.asList()
-        #print len(problem.heuristicInfo.values())
-        #if(food not in problem.heuristicInfo['food']):
-        calculo = abs(position[0] - food[0]) + abs(position[1] - food[1])
-        #man = ( abs(position[0] - food[0]) + abs(position[1] - food[1]) )
-        #eu = ( (position[0] - food[0]) ** 2 + (position[1] - food[1]) ** 2 ) ** 0.5
-
+        #if (len(foodGrid.asList()) != 0):
+        x01 = [position[0], food[0]]    
+        y01 = [position[1], food[1]]
+        x0 = min(x01)
+        x1 = max(x01)
+        y0 = min(y01)
+        y1 = max(y01)
+        copyalfa = (alfa[x0:x1+1,y0:y1+1]).copy()
+        delta1 = copyalfa[(copyalfa == 1)]
+        delta2 = copyalfa[(copyalfa == 0)]
+        valor = len(delta1) / len(delta2)
+            
+        calculo = ((abs(position[0] - food[0]) + abs(position[1] - food[1])) + valor)
         
-        #calculo = ( (position[0] - food[0]) ** 2 + (position[1] - food[1]) ** 2 ) ** 0.5
-        """if(calculo == 0):
-            return 0
-            break"""
+     
         g.append(calculo)
         if (_max <= calculo):
             _max = calculo
             #print cnt
         cnt +=1
-        #x.append(calculo)
-        #print "Len:",len(x)
-        #if (calculo == 0 and food not in problem.heuristicInfo['food']):
-        #    problem.heuristicInfo['food'] =  food
-    #print g
-    g.sort()
-    #print g
-    #print sum(g)//len(g)
-    """print (x)"""
-    """if(len(x) % 2 != 0):
-        z = int(len(x)/2)
-        #return x[int(len(x)/2)]
-    elif(len(x) == 1):
-        z = 0
-    elif(len(x) == 0):
-        return 0  
-    elif(len(x) % 2 == 0) and (len(x) != 0):
-        z = int(len(x)/2)-1"""
-
-        #return x[len(x)/2]
-    #print position, foodGrid.asList()
-    #return -max#x[z]
-    #print position, foodGrid.asList()
-    #if(len(g)!= 0):
-    #    return sum(g)//len(g) - 1
-    #elif(len(g) == 0):
-    #    return 0
-    #return sum(g)//len(g)
-    return -max
+ 
+    if (len(g) == 0):
+        return 0
+  
+    return max(g)
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
     def registerInitialState(self, state):
