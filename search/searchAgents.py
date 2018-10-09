@@ -43,7 +43,7 @@ from game import Actions
 import util
 import time
 import search
-
+import numpy as np
 class GoWestAgent(Agent):
     "An agent that goes West until it can't."
 
@@ -291,7 +291,7 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
-
+        self.heuristicInfo = {}
 
     def getStartState(self):
         """
@@ -299,7 +299,7 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        return (self.startingPosition,[])
+        return (self.startingPosition,list(self.corners))
         #return self.startingPosition
 
 
@@ -322,7 +322,7 @@ class CornersProblem(search.SearchProblem):
         return self.all_corners == 4"""
         
         #print ("test",state)
-        return len(state[1]) == len(self.corners)
+        return len(state[1]) == 0#len(self.corners)
     
         
 
@@ -359,8 +359,8 @@ class CornersProblem(search.SearchProblem):
                 #cost = self.costFn(nextState)
                 #successors.append((nextState, action))#, cost) )
 
-                if (nextState in self.corners and nextState not in nueva_lista):
-                   nueva_lista.append(nextState)
+                if (nextState in self.corners and nextState in nueva_lista):
+                   nueva_lista.remove(nextState)
                 #print ("Nueva Lista", nueva_lista)
                 new_node=(nextState,nueva_lista)
                 successors.append((new_node,action,1))
@@ -407,30 +407,74 @@ def cornersHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     
     _max = 0
+    _min = 9999
+    #print walls,walls[0],walls[0][0]
+    
     #print state[0], walls
     xy1 = state[0]
+    #walls1 = np.array(walls)
+    #print "Walls1:", walls1[:]
+    #print xy1
     #print _max
+    pared = []
     t = 0
     f = 0
-    print walls
+    lista = []
+    #print walls[0:2][0:2],"\n"
     for i in walls:
         for j in i:
             if (j):
                 t+=1
             else:
                 f+=1
-    print (t,f)
+    #print (t,f)
     #print x[0], "\n",x[1], "\n", walls
+    
     for i in corners:
-        if (i not in state[1] and not walls[state[0][0]][state[0][1]]):
+        if (i in state[1]):# and not walls[state[0][0]][state[0][1]]):
+           
             xy2 = i
+            #calculo = int(math.sqrt(abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])))
             calculo = abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
-            
-            print "Nodo: \t", i, "\Calculo :\t", calculo, "Lista : \t", state[1], " Estado\t:", state[0]
+            #calculo = ( (xy1[0] - xy2[0]) ** 2 + (xy1[1] - xy2[1]) ** 2 ) ** 0.5
+            #print "Nodo: \t", i, "\Calculo :\t", calculo, "Lista : \t", state[1], " Estado\t:", state[0]
+            """norte = walls[xy1[0]+1][xy1[1]]
+            sur = walls[xy1[0]-1][xy1[1]]
+            este = walls[xy1[0]][xy1[1]+1]
+            oeste = walls[xy1[0]][xy1[1]-1]
+            pared.append(norte)
+            pared.append(sur)
+            pared.append(este)
+            pared.append(oeste)
+            for i in pared:
+                if(i):
+                    _max += 1"""
             if (_max < calculo):
                 _max = calculo
+            
+    """if (len(state[1]) == 4):# and len(problem.heuristicInfo['max']) == 0 ):
+        problem.heuristicInfo['max'] = _max
+        #return _max
+    elif (len(state[1]) == 4 and len(problem.heuristicInfo['max']) > _max  ):
+        problem.heuristicInfo['max'] = _max"""
     
-    return -max
+    return _max
+        
+            #lista.append(calculo)
+    
+    """lista.sort()
+    if (len(lista)% 2 == 1):
+        z = int(len(lista)/2)
+    elif (len(lista)% 2 == 0 and len(lista) != 0):
+        z = int(len(lista)/2)
+    else:
+        return -max
+    #print len(lista),lista[0]
+    
+    return -max"""
+    
+    
+   
     
     
     #return 0 # Default to trivial solution
@@ -525,10 +569,92 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, foodGrid = state
+    
     "*** YOUR CODE HERE ***"
-    return 0
+    x = []
+    x1 = []
+    _max = 0
+    counter = 0
+    position, foodGrid = state
+    #print "Walls", problem.walls.count()
+    #print problem._expanded
+    #print foodGrid
+    #print foodGrid.asList()
+    #print len(foodGrid[0])
+    for a in foodGrid:
+     #   print "Len:",len(a), "counter", counter , a
+        counter+=1
+        x = []
+        for b in a:
+            if (b):
+                x.append(1)
+            else:
+                x.append(0)
+        x1.append(x)
+              
+        
+    #print ("Num",x1)
+    alfa = np.array(x1,dtype='uint8')
+    print (alfa.T)
+    print foodGrid.asList()[0], position
+    print alfa[1:10+1,1:3+1]
+    copyalfa = (alfa[1:10+1,1:3+1]).copy()
+    print "Cop",copyalfa
+    delta =  copyalfa[:,:] == 1
+    print "Delta",delta
+    #alfa[alfa[1:10+1,1:3+1]] == 1
+    #print delta
+    #print beta.T
+    g = []
+    cnt = 0
+    #print x
+    for food in foodGrid.asList():
+        #print foodGrid.asList()
+        #print len(problem.heuristicInfo.values())
+        #if(food not in problem.heuristicInfo['food']):
+        calculo = abs(position[0] - food[0]) + abs(position[1] - food[1])
+        #man = ( abs(position[0] - food[0]) + abs(position[1] - food[1]) )
+        #eu = ( (position[0] - food[0]) ** 2 + (position[1] - food[1]) ** 2 ) ** 0.5
 
+        
+        #calculo = ( (position[0] - food[0]) ** 2 + (position[1] - food[1]) ** 2 ) ** 0.5
+        """if(calculo == 0):
+            return 0
+            break"""
+        g.append(calculo)
+        if (_max <= calculo):
+            _max = calculo
+            #print cnt
+        cnt +=1
+        #x.append(calculo)
+        #print "Len:",len(x)
+        #if (calculo == 0 and food not in problem.heuristicInfo['food']):
+        #    problem.heuristicInfo['food'] =  food
+    #print g
+    g.sort()
+    #print g
+    #print sum(g)//len(g)
+    """print (x)"""
+    """if(len(x) % 2 != 0):
+        z = int(len(x)/2)
+        #return x[int(len(x)/2)]
+    elif(len(x) == 1):
+        z = 0
+    elif(len(x) == 0):
+        return 0  
+    elif(len(x) % 2 == 0) and (len(x) != 0):
+        z = int(len(x)/2)-1"""
+
+        #return x[len(x)/2]
+    #print position, foodGrid.asList()
+    #return -max#x[z]
+    #print position, foodGrid.asList()
+    #if(len(g)!= 0):
+    #    return sum(g)//len(g) - 1
+    #elif(len(g) == 0):
+    #    return 0
+    #return sum(g)//len(g)
+    return -max
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
     def registerInitialState(self, state):

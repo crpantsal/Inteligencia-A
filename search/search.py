@@ -163,7 +163,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     "*** YOUR CODE HERE ***"
 
     
-
+    
     frontera = util.PriorityQueue()
     nodo = problem.getStartState()
     frontera.push((nodo,[],0),1)
@@ -174,7 +174,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         nodo = element[0]
         direccion = element[1]
         coste = element[2]
-        #print coste,nodo
+        #print nodo, direccion ,coste
         if(problem.isGoalState(nodo)):
             return direccion
         
