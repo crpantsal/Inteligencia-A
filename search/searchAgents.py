@@ -291,7 +291,7 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
-        self.heuristicInfo = {}
+
 
     def getStartState(self):
         """
@@ -299,30 +299,16 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        return (self.startingPosition,list(self.corners))
-        #return self.startingPosition
+        return (self.startingPosition,list(self.corners))       
 
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        "*** YOUR CODE HERE ***"#Mirar al completar el juego
-        """isGoal = state == self.corners
-        if isGoal and self.visualize:
-            self._visitedlist.append(state)
-            import __main__
-            if '_display' in dir(__main__):
-                if 'drawExpandedCells' in dir(__main__._display): #@UndefinedVariable
-                    __main__._display.drawExpandedCells(self._visitedlist) #@UndefinedVariable
-        return isGoal"""
+        "*** YOUR CODE HERE ***"
         
-        """if (state in self.corners):
-            self.all_corners += 1
-        return self.all_corners == 4"""
-        
-        #print ("test",state)
-        return len(state[1]) == 0#len(self.corners)
+        return len(state[1]) == 0
     
         
 
@@ -337,8 +323,7 @@ class CornersProblem(search.SearchProblem):
             is the incremental cost of expanding to that successor
         """
         nodo, lista = state
-        #print("state",state)
-        #print("lis",lista)
+
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
@@ -350,26 +335,21 @@ class CornersProblem(search.SearchProblem):
 
             "*** YOUR CODE HERE ***"
             x,y = nodo
-            #print (x,y)
             dx, dy = Actions.directionToVector(action)
             nueva_lista =list(lista)
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
-                nextState = (nextx, nexty)
-                #cost = self.costFn(nextState)
-                #successors.append((nextState, action))#, cost) )
+                nextState = (nextx, nexty)            
 
                 if (nextState in self.corners and nextState in nueva_lista):
                    nueva_lista.remove(nextState)
-                #print ("Nueva Lista", nueva_lista)
+                   
                 new_node=(nextState,nueva_lista)
                 successors.append((new_node,action,1))
-            #successors.append(self.aux)
-            #print successors
-                
+
                 
         self._expanded += 1 # DO NOT CHANGE
-        #print (successors)
+
         
         
         return successors
@@ -406,78 +386,14 @@ def cornersHeuristic(state, problem):
 
     "*** YOUR CODE HERE ***"
     
-    _max = 0
-    _min = 9999
-    #print walls,walls[0],walls[0][0]
+    position = state[0]
+    state_corners = state[1]
+    all_corners = [util.manhattanDistance(position,corner) for corner in corners if corner in state_corners ] 
     
-    #print state[0], walls
-    xy1 = state[0]
-    #walls1 = np.array(walls)
-    #print "Walls1:", walls1[:]
-    #print xy1
-    #print _max
-    pared = []
-    t = 0
-    f = 0
-    lista = []
-    #print walls[0:2][0:2],"\n"
-    for i in walls:
-        for j in i:
-            if (j):
-                t+=1
-            else:
-                f+=1
-    #print (t,f)
-    #print x[0], "\n",x[1], "\n", walls
-    
-    for i in corners:
-        if (i in state[1]):# and not walls[state[0][0]][state[0][1]]):
-           
-            xy2 = i
-            #calculo = int(math.sqrt(abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])))
-            calculo = abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
-            #calculo = ( (xy1[0] - xy2[0]) ** 2 + (xy1[1] - xy2[1]) ** 2 ) ** 0.5
-            #print "Nodo: \t", i, "\Calculo :\t", calculo, "Lista : \t", state[1], " Estado\t:", state[0]
-            """norte = walls[xy1[0]+1][xy1[1]]
-            sur = walls[xy1[0]-1][xy1[1]]
-            este = walls[xy1[0]][xy1[1]+1]
-            oeste = walls[xy1[0]][xy1[1]-1]
-            pared.append(norte)
-            pared.append(sur)
-            pared.append(este)
-            pared.append(oeste)
-            for i in pared:
-                if(i):
-                    _max += 1"""
-            if (_max < calculo):
-                _max = calculo
-            
-    """if (len(state[1]) == 4):# and len(problem.heuristicInfo['max']) == 0 ):
-        problem.heuristicInfo['max'] = _max
-        #return _max
-    elif (len(state[1]) == 4 and len(problem.heuristicInfo['max']) > _max  ):
-        problem.heuristicInfo['max'] = _max"""
-    
-    return _max
-        
-            #lista.append(calculo)
-    
-    """lista.sort()
-    if (len(lista)% 2 == 1):
-        z = int(len(lista)/2)
-    elif (len(lista)% 2 == 0 and len(lista) != 0):
-        z = int(len(lista)/2)
-    else:
-        return -max
-    #print len(lista),lista[0]
-    
-    return -max"""
-    
-    
+    if(len(all_corners) == 0):
+        return 0
    
-    
-    
-    #return 0 # Default to trivial solution
+    return max(all_corners)
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -571,63 +487,17 @@ def foodHeuristic(state, problem):
     """
     
     "*** YOUR CODE HERE ***"
-    x = []
-    x1 = []
-    _max = 0
-    counter = 0
+
+
     position, foodGrid = state
- 
-    for a in foodGrid:
-     #   print "Len:",len(a), "counter", counter , a
-        counter+=1
-        x = []
-        for b in a:
-            if (b):
-                x.append(1)
-            else:
-                x.append(0)
-        x1.append(x)
-              
-        
-    #print ("Num",x1)
-    alfa = np.array(x1,dtype='uint8')
-  
     
-    copyalfa = (alfa[1:10+1,1:3+1]).copy()
-
-    #delta =  copyalfa[:,:] == 1
-    delta1 = copyalfa[(copyalfa == 1)]
-
-    g = []
-    cnt = 0
-    valor = 0
-    #print x
-    for food in foodGrid.asList():
-        #if (len(foodGrid.asList()) != 0):
-        x01 = [position[0], food[0]]    
-        y01 = [position[1], food[1]]
-        x0 = min(x01)
-        x1 = max(x01)
-        y0 = min(y01)
-        y1 = max(y01)
-        copyalfa = (alfa[x0:x1+1,y0:y1+1]).copy()
-        delta1 = copyalfa[(copyalfa == 1)]
-        delta2 = copyalfa[(copyalfa == 0)]
-        valor = len(delta1) / len(delta2)
-            
-        calculo = ((abs(position[0] - food[0]) + abs(position[1] - food[1])) + valor)
+    foods = [util.manhattanDistance(position,food) for food in foodGrid.asList()]
         
-     
-        g.append(calculo)
-        if (_max <= calculo):
-            _max = calculo
-            #print cnt
-        cnt +=1
- 
-    if (len(g) == 0):
+    if (len(foods) == 0):
         return 0
   
-    return max(g)
+    return max(foods)
+
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
     def registerInitialState(self, state):

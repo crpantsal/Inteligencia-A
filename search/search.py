@@ -92,27 +92,23 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
     
-    #print problem.corners
-    
     nodo = problem.getStartState()
     frontera = util.Stack()
     frontera.push((nodo,[]))    
     cerrados = []
  
     while (not frontera.isEmpty()):
-        elemento = frontera.pop()
-        nodo = elemento[0]        
-        list_position = elemento[1]
+        
+        nodo,list_position = frontera.pop()       
                 
         if (problem.isGoalState(nodo)):            
             return list_position
-
         
         if (nodo not in cerrados):
             cerrados.append(nodo)            
-            for i in problem.getSuccessors(nodo):
-                if (i[0] not in cerrados):                       
-                    frontera.push((i[0],list_position+[i[1]]))
+            for success in problem.getSuccessors(nodo):
+                if (success[0] not in cerrados):                       
+                    frontera.push((success[0],list_position+[success[1]]))
   
             
 
@@ -129,18 +125,17 @@ def breadthFirstSearch(problem):
     frontera.push((nodo,[]))
     
     while(not frontera.isEmpty()):
-        elemento = frontera.pop()
-        nodo = elemento[0]
-        list_position = elemento[1]  
+        
+        nodo,list_position = frontera.pop()   
         
         if (problem.isGoalState(nodo)):            
             return list_position
     
         if (nodo not in cerrados):
             cerrados.append(nodo)        
-            for i in problem.getSuccessors(nodo):
-                if (i[0] not in cerrados):
-                    frontera.push((i[0],list_position+[i[1]]))
+            for success in problem.getSuccessors(nodo):
+                if (success[0] not in cerrados):
+                    frontera.push((success[0],list_position+[success[1]]))
                 
     
     
@@ -170,31 +165,24 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     cerrados = []
 
     while(not frontera.isEmpty()):
-        element = frontera.pop()
-        nodo = element[0]
-        direccion = element[1]
-        coste = element[2]
-        #print nodo, direccion ,coste
+        
+        nodo,direccion,coste = frontera.pop()
+       
         if(problem.isGoalState(nodo)):
             return direccion
         
         if (nodo not in cerrados):
             cerrados.append(nodo)
             
-            for i in problem.getSuccessors(nodo):              
-                #if (i[0] not in cerrados):      
-                #print problem.goal
-                #print heuristic(nodo,problem)
-                #actual = searchAgents.manhattanHeuristic(i[0],problem)
-                actual = heuristic(i[0],problem)
-                coste_a = coste+i[2]
-                b = direccion+[i[1]]
+            for success in problem.getSuccessors(nodo):              
+                
+                actual = heuristic(success[0],problem)
+                coste_a = coste+success[2]
+                movimientos = direccion+[success[1]]
                 cota = actual+coste_a    
-                frontera.push((i[0],b,coste_a),cota)
+                frontera.push((success[0],movimientos,coste_a),cota)
 
 
-
-    
     util.raiseNotDefined()
 
 
