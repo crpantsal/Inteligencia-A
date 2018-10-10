@@ -186,6 +186,31 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     util.raiseNotDefined()
 
 
+def DFSLimited(problem, limit=70):
+    
+    nodo = problem.getStartState()
+    frontera = util.Stack()
+    frontera.push((nodo,[],0))    
+    cerrados = []
+
+    
+    while (not frontera.isEmpty()):
+        
+        nodo,list_position, coste = frontera.pop()       
+                
+        if (problem.isGoalState(nodo)):     
+            print (len(list_position))
+            return list_position
+        
+        if (nodo not in cerrados and coste < 75):
+            cerrados.append(nodo)            
+            for success in problem.getSuccessors(nodo):
+                if (success[0] not in cerrados):                       
+                    frontera.push((success[0],list_position+[success[1]],coste+success[2]))
+                    
+
+        
+
 # Abbreviations
 bfs = breadthFirstSearch
 dfs = depthFirstSearch
