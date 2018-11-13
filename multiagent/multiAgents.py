@@ -75,7 +75,31 @@ class ReflexAgent(Agent):
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         "*** YOUR CODE HERE ***"
-        return successorGameState.getScore()
+        
+        #contador = 0
+        #if (contador == 0):
+        
+            
+        #ghostcaps = [x.getCapsules() for x in successorGameState]
+        
+        #print ghostcaps
+        print (successorGameState.getScore())#Puntuacion que se ha de ir sumando 
+        print "Succesors",type(successorGameState)
+        print "\nNewPos",newPos #Posicion actual del pacman
+        for a in newFood:
+            print "\nFood", a #Mirar la practica 1 en la que te decia las posiciones a las que podias ir
+        for i in successorGameState.getGhostPositions() :
+            #for b in i:
+            #    print "\nestadosgosth",b
+            #print "\nestadosgosth",i,str(i)[3]#i.action()#str(i)
+            print i#Posicion del fantasma
+        print "\nScared",newScaredTimes #Esto de momento ignorarlo.
+        #    contador+=1
+        
+        
+        
+        
+        return max(-1)#successorGameState.getScore()
 
 def scoreEvaluationFunction(currentGameState):
     """
