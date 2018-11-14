@@ -101,8 +101,12 @@ class ReflexAgent(Agent):
             """if (newScaredTimes != 0):
                 
                 print newScaredTimes"""
+            
+            
+           
             for i in successorGameState.getGhostPositions() :
                 for a in newScaredTimes:
+                    
                     if (a == 0):
                         if (util.manhattanDistance(newPos,i) < 1):
                             return -1000000
@@ -171,6 +175,12 @@ class MinimaxAgent(MultiAgentSearchAgent):
             Returns the total number of agents in the game
         """
         "*** YOUR CODE HERE ***"
+        print gameState.getNumAgents()
+        print gameState.getLegalActions(0)
+        print gameState.getLegalActions(1)
+        print gameState.getLegalActions(2)
+        print gameState.getLegalActions(3)
+        
         util.raiseNotDefined()
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
