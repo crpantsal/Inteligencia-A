@@ -68,39 +68,50 @@ class ReflexAgent(Agent):
         to create a masterful evaluation function.
         """
         # Useful information you can extract from a GameState (pacman.py)
-        successorGameState = currentGameState.generatePacmanSuccessor(action)
-        newPos = successorGameState.getPacmanPosition()
-        newFood = successorGameState.getFood()
-        newGhostStates = successorGameState.getGhostStates()
-        newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
-
-        "*** YOUR CODE HERE ***"
-        
-        #contador = 0
-        #if (contador == 0):
-        
+        if (action != "Stop"):
+            successorGameState = currentGameState.generatePacmanSuccessor(action)
+            newPos = successorGameState.getPacmanPosition()
+            newFood = successorGameState.getFood()
+            newGhostStates = successorGameState.getGhostStates()
+            newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
+    
+            "*** YOUR CODE HERE ***"
             
-        #ghostcaps = [x.getCapsules() for x in successorGameState]
-        
-        #print ghostcaps
-        #print (successorGameState.getScore())#Puntuacion que se ha de ir sumando 
-        #print "Succesors",type(successorGameState)
-        #print "\nNewPos",newPos #Posicion actual del pacman
-        """for a in newFood.asList():
-            print "\nFood", a #Mirar la practica 1 en la que te decia las posiciones a las que podias ir"""
-        #print "n",len( newFood.asList())
-        #for i in successorGameState.getGhostPositions() :
-            #for b in i:
-            #    print "\nestadosgosth",b
-            #print "\nestadosgosth",i,str(i)[3]#i.action()#str(i)
-            #print i#Posicion del fantasma
-        #print "\nScared",newScaredTimes #Esto de momento ignorarlo.
-        #    contador+=1
-        for i in successorGameState.getGhostPositions() :
-            if (util.manhattanDistance(newPos,i) < 3):
-                return -1000000
-            elif (util.manhattanDistance(newPos,i) > 3):
-                return 10000000 + successorGameState.getScore()
+            #contador = 0
+            #if (contador == 0):
+            
+                
+            #ghostcaps = [x.getCapsules() for x in successorGameState]
+            
+            #print ghostcaps
+            #print (successorGameState.getScore())#Puntuacion que se ha de ir sumando 
+            #print "Succesors",type(successorGameState)
+            #print "\nNewPos",newPos #Posicion actual del pacman
+            """for a in newFood.asList():
+                print "\nFood", a #Mirar la practica 1 en la que te decia las posiciones a las que podias ir"""
+            #print "n",len( newFood.asList())
+            #for i in successorGameState.getGhostPositions() :
+                #for b in i:
+                #    print "\nestadosgosth",b
+                #print "\nestadosgosth",i,str(i)[3]#i.action()#str(i)
+                #print i#Posicion del fantasma
+            #print "\nScared",newScaredTimes #Esto de momento ignorarlo.
+            #    contador+=1
+            #print type(action)
+            """if (newScaredTimes != 0):
+                
+                print newScaredTimes"""
+            for i in successorGameState.getGhostPositions() :
+                for a in newScaredTimes:
+                    if (a == 0):
+                        if (util.manhattanDistance(newPos,i) < 1):
+                            return -1000000
+                        elif (util.manhattanDistance(newPos,i) > 1):
+                            return 10000000 + successorGameState.getScore()
+                    else:
+                        return 10000000 + successorGameState.getScore()
+        else:
+            return -10000000
             
         
         
