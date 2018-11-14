@@ -175,13 +175,67 @@ class MinimaxAgent(MultiAgentSearchAgent):
             Returns the total number of agents in the game
         """
         "*** YOUR CODE HERE ***"
-        print gameState.getNumAgents()
-        print gameState.getLegalActions(0)
-        print gameState.getLegalActions(1)
-        print gameState.getLegalActions(2)
-        print gameState.getLegalActions(3)
+        legalMoves = gameState.getLegalActions()
         
-        util.raiseNotDefined()
+        
+        print "Num Agents",gameState.getNumAgents()
+        x = gameState.getLegalActions(0)
+        print x[0]
+        print gameState.generateSuccessor(0, x[0])
+        
+        scores = [self.evaluationFunction(gameState) for action in legalMoves]
+        
+        for i in scores:
+            print "Scores\t",  i
+        
+        for alfa in gameState.generateSuccessor(0, x[0]):
+            print "Successors",alfa.evaluationFunction
+            
+        
+        
+        
+        
+        def max_Value(gameState,index):
+            if (self.depth == 0):
+                return self.evaluationFunction(None)
+            
+            value = -9999999999999999
+            
+            for actions in getLegalActions(index):                      
+                for i in gameState.generateSuccessor(index, actions):
+                    #value = max (self.evaluationFunction)
+                    print i.evaluationFunction
+            return value
+                
+                
+        def min_value(gameState,index):
+            if (self.depth == 0):
+                return gameState
+            
+            value = 999999999999999999
+                
+            for actions in getLegalActions(index):                      
+                for i in gameState.generateSuccessor(index, actions):
+                    #value = min (self.evaluationFunction)
+            return value
+                #value = min (self.evaluationFunction)
+        
+            
+            
+        for agents in range(gameState.getNumAgents()):
+            
+            if (agents == 0):
+                value =  max_Value(gameState,agents)#???
+                
+            else:
+                value =  min_value(gameState,agents)
+            
+            
+        
+        return "Stop"
+
+        
+    
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
