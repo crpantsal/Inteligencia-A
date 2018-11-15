@@ -175,7 +175,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
             Returns the total number of agents in the game
         """
         "*** YOUR CODE HERE ***"
-        legalMoves = gameState.getLegalActions()
+        """legalMoves = gameState.getLegalActions()
         
         
         print "Num Agents",gameState.getNumAgents()
@@ -228,11 +228,48 @@ class MinimaxAgent(MultiAgentSearchAgent):
                 value =  max_Value(gameState,agents)#???
                 
             else:
-                value =  min_value(gameState,agents)
+                value =  min_value(gameState,agents)"""
+                
+                
+        
+        def minimax(currentGameState, depth):
+            
+            if (depth == 0 or currentGameState.isWin() or currentGameState.isLose()):
+                return self.evaluationFunction(currentGameState) ,None
+            
+            agentIndice = depth % currentGameState.getNumAgents()
+            indice = (currentGameState.getNumAgents() - agentIndice) % currentGameState.getNumAgents()
+            
+            if indice == 0:
+                alpha,a = (-9999999999,None)
+                lista = []
+                el = 0
+                
+                for i in currentGameState.getLegalActions():
+                    el,action = (minimax(currentGameState.generateSuccessor(indice,i),depth-1)[0],1 )
+                    if (alpha < el):
+                        a = action
+                        alpha = el
+                return alpha,a
+        
+            else:
+                beta,b = (-9999999999,None)
+                lista = []
+                el = 0
+                
+                for i in currentGameState.getLegalActions():
+                    el,action = (minimax(currentGameState.generateSuccessor(indice,i),depth-1)[0],1 )
+                    if (beta > el):
+                        b = action
+                        beta = el
+                return beta,b
             
             
         
-        return "Stop"
+        #return "Stop"
+        
+        var = minimax(gameState,self.depth * gameState.getNumAgents())
+        return var[1]
 
         
     
