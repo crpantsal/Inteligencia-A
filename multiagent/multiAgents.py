@@ -234,7 +234,8 @@ class MinimaxAgent(MultiAgentSearchAgent):
                 for move in currentGameState.getLegalActions():
                     el,action = (minimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
                     lista[el] = action
-                value = max(lista.keys())
+                    x = max(lista.keys())
+                    value = max(x,value)
                 #print value,0
                 return value,lista[value]
             
@@ -245,8 +246,8 @@ class MinimaxAgent(MultiAgentSearchAgent):
                 for move in currentGameState.getLegalActions(indice):
                     el,action = (minimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
                     lista[el] = action                    
-                value = min(lista.keys())
-                
+                    x = min(lista.keys())
+                    value = min(x,value)
                 #print value,"Not 0"
                 return value,lista[value]
             
@@ -281,10 +282,11 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                     el,action = (poda_alfa_beta(currentGameState.generateSuccessor(indice,move),depth-1,alfa,beta)[0],move)
                     lista[el] = action
                     value = max(lista.keys())
+                                        
                     if (value >= beta):
                         return value,lista[value]
+                        
                     alfa = max(alfa,value)
-                    
                 return value,lista[value]
             
             else:
@@ -294,10 +296,13 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 for move in currentGameState.getLegalActions(indice):
                     el,action = (poda_alfa_beta(currentGameState.generateSuccessor(indice,move),depth-1,alfa,beta)[0],move)
                     lista[el] = action                    
-                    value = min(lista.keys())
+                    value = min(lista.keys())                  
+                    
+                    
                     if (value <= alfa):
                         return value,lista[value]
-                    beta = min(beta,value)
+                     #break
+                    beta = min(value,beta)
                 return value,lista[value]
             
         var = poda_alfa_beta(gameState,self.depth * gameState.getNumAgents(),-float("inf"),float("inf"))
@@ -333,9 +338,6 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
                     el,action = (Expectimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
                     lista[el] = action
                     value = max(lista.keys())
-                    """if (value >= beta):
-                        return value,lista[value]
-                    alfa = max(alfa,value)"""
                     
                 return value,lista[value]
             
