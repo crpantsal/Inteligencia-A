@@ -281,9 +281,9 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 for move in currentGameState.getLegalActions():
                     el,action = (poda_alfa_beta(currentGameState.generateSuccessor(indice,move),depth-1,alfa,beta)[0],move)
                     lista[el] = action
-                    value = max(lista.keys())
-                                        
-                    if (value >= beta):
+                    value = max(lista.keys())                    
+                    
+                    if (value > beta):
                         return value,lista[value]
                         
                     alfa = max(alfa,value)
@@ -296,13 +296,14 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 for move in currentGameState.getLegalActions(indice):
                     el,action = (poda_alfa_beta(currentGameState.generateSuccessor(indice,move),depth-1,alfa,beta)[0],move)
                     lista[el] = action                    
-                    value = min(lista.keys())                  
+                    value = min(lista.keys())                 
                     
                     
-                    if (value <= alfa):
+                    if (value < alfa):
                         return value,lista[value]
-                     #break
+                     
                     beta = min(value,beta)
+                    
                 return value,lista[value]
             
         var = poda_alfa_beta(gameState,self.depth * gameState.getNumAgents(),-float("inf"),float("inf"))
