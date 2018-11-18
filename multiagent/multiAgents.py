@@ -234,7 +234,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
                 for move in currentGameState.getLegalActions():
                     el,action = (minimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
                     lista[el] = action
-                    value = max(lista.keys())
+                value = max(lista.keys())
                 #print value,0
                 return value,lista[value]
             
@@ -245,7 +245,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
                 for move in currentGameState.getLegalActions(indice):
                     el,action = (minimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
                     lista[el] = action                    
-                    value = min(lista.keys())
+                value = min(lista.keys())
                 
                 #print value,"Not 0"
                 return value,lista[value]
@@ -317,7 +317,44 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
           legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        def Expectimax(currentGameState, depth):
+             
+            if (depth == 0 or currentGameState.isWin() or currentGameState.isLose()):
+                return self.evaluationFunction(currentGameState) ,None
+            
+            agentIndice = depth % currentGameState.getNumAgents()
+            indice = (currentGameState.getNumAgents() - agentIndice) % currentGameState.getNumAgents()
+            
+            if indice == 0:
+                value = -float("inf")
+                lista = {}
+                
+                for move in currentGameState.getLegalActions():
+                    el,action = (Expectimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
+                    lista[el] = action
+                    value = max(lista.keys())
+                    """if (value >= beta):
+                        return value,lista[value]
+                    alfa = max(alfa,value)"""
+                    
+                return value,lista[value]
+            
+            else:
+                value = 0
+                numAccions = 0
+                lista = {}                
+                
+                for move in currentGameState.getLegalActions(indice):
+                    numAccions += 1 
+                    el,action = (Expectimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
+                    value += el
+                    
+                    lista[value] = action                    
+                    
+                return value/numAccions,lista[value]
+            
+        var = Expectimax(gameState,self.depth * gameState.getNumAgents())
+        return var[1]
 
 def betterEvaluationFunction(currentGameState):
     """
