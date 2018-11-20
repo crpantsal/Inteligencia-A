@@ -229,25 +229,27 @@ class MinimaxAgent(MultiAgentSearchAgent):
             
             if indice == 0:
                 value = -9999999999
-                lista = {}
+                lista = {minimax(currentGameState.generateSuccessor(indice,move),depth-1)[0] : move for move in currentGameState.getLegalActions()}
                 
-                for move in currentGameState.getLegalActions():
-                    el,action = (minimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
-                    lista[el] = action
-                    x = max(lista.keys())
-                    value = max(x,value)
+                #lista = {}
+                
+                #for move in currentGameState.getLegalActions():
+                    #el,action = (minimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
+                    #lista[el] = action
+                x = max(lista.keys())
+                value = max(x,value)
                 #print value,0
                 return value,lista[value]
             
             else:
                 value = 9999999999
-                lista = {}                
+                lista = {minimax(currentGameState.generateSuccessor(indice,move),depth-1)[0] : move for move in currentGameState.getLegalActions(indice)}
                 
-                for move in currentGameState.getLegalActions(indice):
-                    el,action = (minimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
-                    lista[el] = action                    
-                    x = min(lista.keys())
-                    value = min(x,value)
+                #for move in currentGameState.getLegalActions(indice):
+                    #el,action = (minimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
+                    #lista[el] = action                    
+                x = min(lista.keys())
+                value = min(x,value)
                 #print value,"Not 0"
                 return value,lista[value]
             
@@ -333,13 +335,14 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             
             if indice == 0:
                 value = -float("inf")
-                lista = {}
+                lista = {Expectimax(currentGameState.generateSuccessor(indice,move),depth-1)[0] : move for move in currentGameState.getLegalActions() }
                 
-                for move in currentGameState.getLegalActions():
+                """for move in currentGameState.getLegalActions():
                     el,action = (Expectimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
                     lista[el] = action
-                    value = max(lista.keys())
-                    
+                
+                """
+                value = max(lista.keys()) 
                 return value,lista[value]
             
             else:
