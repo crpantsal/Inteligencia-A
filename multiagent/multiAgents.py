@@ -260,7 +260,6 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             if indice == 0:
                 value = -float("inf")
                 lista = {Expectimax(currentGameState.generateSuccessor(indice,move),depth-1)[0] : move for move in currentGameState.getLegalActions() }
-
                 value = max(lista.keys()) 
                 return value,lista[value]
             
@@ -281,6 +280,62 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             
         exp = Expectimax(gameState,self.depth * gameState.getNumAgents())
         return exp[1]
+    
+    
+"""EXAMEN"""    
+class expectimaxMinimaxAgent2(MultiAgentSearchAgent):
+    
+    def getAction(self, gameState):
+    
+        def expectimax_MinimaxAgent2(currentGameState, depth):
+    
+            if (depth == 0 or currentGameState.isWin() or currentGameState.isLose()):
+                return self.evaluationFunction(currentGameState) ,None
+        
+            agentIndice = depth % currentGameState.getNumAgents()
+            indice = (currentGameState.getNumAgents() - agentIndice) % currentGameState.getNumAgents()
+            
+            """Pacaman siempre maximizara el valor"""
+            if indice == 0: 
+                
+                value = -float("inf") # Generamos un diccionario donde la key sera el valor que tiene hacer un movimiento, y el value el movimiento
+                lista = {expectimax_MinimaxAgent2(currentGameState.generateSuccessor(indice,move),depth-1)[0] : move for move in currentGameState.getLegalActions()}
+                
+                max_value = max(lista.keys())
+                value = max(max_value,value)
+                return value,lista[value] #Retornamos el valor maximo,con el movimiento
+                
+                
+                
+            #Si es par usara expectimax
+            elif indice % 2 == 0: 
+                value = 0
+                numAccions = 0
+                lista = {}
+                
+                #El valor sera la suma de la puntuacion obtenido, entre el numero de acciones, y la accion la ultima realizada
+                for move in currentGameState.getLegalActions(indice):
+                    numAccions += 1 
+                    score,action = (expectimax_MinimaxAgent2(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
+                    value += score
+                    
+                    lista[value] = action                    
+           
+                return value/numAccions,lista[value]
+            
+            #Si es impar usara minimax
+            elif indice % 2 != 0: 
+                
+                value = float("inf") # Generamos un diccionario donde la key sera el valor que tiene hacer un movimiento, y el value el movimiento
+                lista = {expectimax_MinimaxAgent2(currentGameState.generateSuccessor(indice,move),depth-1)[0] : move for move in currentGameState.getLegalActions(indice)}
+                                 
+                min_value = min(lista.keys())
+                value = min(min_value,value)
+                return value,lista[value]#Retornamos el valor minimos,con el movimiento
+    
+    
+        exp_min_max = expectimax_MinimaxAgent2(gameState,self.depth * gameState.getNumAgents())
+        return exp_min_max[1]
 
 def betterEvaluationFunction(currentGameState):
     """
