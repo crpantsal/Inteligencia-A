@@ -68,6 +68,13 @@ class ReflexAgent(Agent):
         to create a masterful evaluation function.
         """
         # Useful information you can extract from a GameState (pacman.py)
+        
+        """La funcion de evaluacion funcianara de la siguiente forma, si la accion es stop 
+        retornaremos un numero negativo, en caso contrario si pacaman esta cerca de fantasma y
+        este no ha comido una caosula, devolveremos un  numero negativo para que se aleje, en 
+        caso contrario devolveremos un numero positivo y la puntacion obetnida, y en caso de que estemos
+        lejos del fanstasma devolveremos un numero positivo y la puntacion obetnida"""
+        
         if (action != "Stop"):
             successorGameState = currentGameState.generatePacmanSuccessor(action)
             newPos = successorGameState.getPacmanPosition()
@@ -75,41 +82,15 @@ class ReflexAgent(Agent):
             newGhostStates = successorGameState.getGhostStates()
             newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
     
-            "*** YOUR CODE HERE ***"
-            
-            #contador = 0
-            #if (contador == 0):
-            
-                
-            #ghostcaps = [x.getCapsules() for x in successorGameState]
-            
-            #print ghostcaps
-            #print (successorGameState.getScore())#Puntuacion que se ha de ir sumando 
-            #print "Succesors",type(successorGameState)
-            #print "\nNewPos",newPos #Posicion actual del pacman
-            """for a in newFood.asList():
-                print "\nFood", a #Mirar la practica 1 en la que te decia las posiciones a las que podias ir"""
-            #print "n",len( newFood.asList())
-            #for i in successorGameState.getGhostPositions() :
-                #for b in i:
-                #    print "\nestadosgosth",b
-                #print "\nestadosgosth",i,str(i)[3]#i.action()#str(i)
-                #print i#Posicion del fantasma
-            #print "\nScared",newScaredTimes #Esto de momento ignorarlo.
-            #    contador+=1
-            #print type(action)
-            """if (newScaredTimes != 0):
-                
-                print newScaredTimes"""
             
             
            
-            for i in successorGameState.getGhostPositions():
-                for a in newScaredTimes:                    
-                    if (a != 0):
-                        if (util.manhattanDistance(newPos,i) < 1):
+            for ghost in successorGameState.getGhostPositions():
+                for scared in newScaredTimes:                    
+                    if (scared != 0):
+                        if (util.manhattanDistance(newPos,ghost) < 1):
                             return -1000
-                        elif (util.manhattanDistance(newPos,i) > 1):
+                        elif (util.manhattanDistance(newPos,ghost) > 1):
                             return 1000 + successorGameState.getScore()
                     else:
                         return 1000 + (successorGameState.getScore())
@@ -117,10 +98,6 @@ class ReflexAgent(Agent):
             return -1000
             
         
-        
-        #return max(-1)#successorGameState.getScore()
-        #return -2;
-
 def scoreEvaluationFunction(currentGameState):
     """
       This default evaluation function just returns the score of the state.
@@ -179,26 +156,26 @@ class MinimaxAgent(MultiAgentSearchAgent):
         def minimax(currentGameState, depth):
              
             if (depth == 0 or currentGameState.isWin() or currentGameState.isLose()):
-                return self.evaluationFunction(currentGameState) ,None
+                return self.evaluationFunction(currentGameState) ,None 
             
             agentIndice = depth % currentGameState.getNumAgents()
             indice = (currentGameState.getNumAgents() - agentIndice) % currentGameState.getNumAgents()
             
-            if indice == 0:
-                value = -float("inf")
+            if indice == 0: #Para el pacamnan maximizamos nuesto valor 
+                value = -float("inf") # Generamos un diccionario donde la key sera el valor que tiene hacer un movimiento, y el value el movimiento
                 lista = {minimax(currentGameState.generateSuccessor(indice,move),depth-1)[0] : move for move in currentGameState.getLegalActions()}
                 
                 max_value = max(lista.keys())
                 value = max(max_value,value)
-                return value,lista[value]
+                return value,lista[value] #Retornamos el valor maximo,con el movimiento
             
-            else:
-                value = float("inf")
+            else:#Para los fantasmas minimizamos nuestro valor
+                value = float("inf") # Generamos un diccionario donde la key sera el valor que tiene hacer un movimiento, y el value el movimiento
                 lista = {minimax(currentGameState.generateSuccessor(indice,move),depth-1)[0] : move for move in currentGameState.getLegalActions(indice)}
                                  
                 min_value = min(lista.keys())
                 value = min(min_value,value)
-                return value,lista[value]
+                return value,lista[value]#Retornamos el valor minimos,con el movimiento
             
         min_max = minimax(gameState,self.depth * gameState.getNumAgents())
         return min_max[1]
@@ -292,7 +269,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
                 numAccions = 0
                 lista = {}
                 
-                
+                #El valor sera la suma de la puntuacion obtenido, entre el numero de acciones, y la accion la ultima realizada
                 for move in currentGameState.getLegalActions(indice):
                     numAccions += 1 
                     score,action = (Expectimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
@@ -314,27 +291,29 @@ def betterEvaluationFunction(currentGameState):
     """
     "*** YOUR CODE HERE ***"
     
+    """Nuestra funcion de evaluacion sera la distancia de manhathan entre la comida y el pacaman     + 
+     LA distancia entre las capsulas y el pacman, menos la distancia entre los fantasmas y el pacman"""
     
     newPos = currentGameState.getPacmanPosition()
     newFood = currentGameState.getFood()
     
-    foodscor = 0
+    dist_food = 0
     
-    for i in newFood.asList():
-        foodscor=max(foodscor,1/util.manhattanDistance(newPos,i))
+    for food in newFood.asList():
+        dist_food=max(dist_food,util.manhattanDistance(newPos,food) ** -1 )
     
-    GhostPos = 0
+    dist_ghost = 0
     
     for ghost in currentGameState.getGhostStates():
-        GhostPos = max(GhostPos,util.manhattanDistance(currentGameState.getPacmanPosition(),ghost.getPosition()))
+        dist_ghost = max(dist_ghost,util.manhattanDistance(currentGameState.getPacmanPosition(),ghost.getPosition()))
     
-    coreCapsules = 0
+    dist_caps = 0
     for Cap in currentGameState.getCapsules():
-        coreCapsules=max(coreCapsules,1/util.manhattanDistance(Cap,currentGameState.getPacmanPosition()))
+        dist_caps=max(dist_caps,util.manhattanDistance(Cap,currentGameState.getPacmanPosition()) **-1)
     
-    return currentGameState.getScore() + foodscor - GhostPos + coreCapsules
+    return currentGameState.getScore() + dist_food - dist_ghost + dist_caps
     
-    #return 10
+  
     
     
 
