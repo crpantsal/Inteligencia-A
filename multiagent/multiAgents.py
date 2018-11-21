@@ -104,18 +104,17 @@ class ReflexAgent(Agent):
             
             
            
-            for i in successorGameState.getGhostPositions() :
-                for a in newScaredTimes:
-                    
-                    if (a == 0):
+            for i in successorGameState.getGhostPositions():
+                for a in newScaredTimes:                    
+                    if (a != 0):
                         if (util.manhattanDistance(newPos,i) < 1):
-                            return -1000000
+                            return -1000
                         elif (util.manhattanDistance(newPos,i) > 1):
-                            return 10000000 + successorGameState.getScore()
+                            return 1000 + successorGameState.getScore()
                     else:
-                        return 10000000 + successorGameState.getScore()
+                        return 1000 + (successorGameState.getScore())
         else:
-            return -10000000
+            return -1000
             
         
         
@@ -176,48 +175,6 @@ class MinimaxAgent(MultiAgentSearchAgent):
         """
         "*** YOUR CODE HERE ***"
        
-                
-                
-        
-        """def minimax(currentGameState, depth):
-             
-            if (depth == 0 or currentGameState.isWin() or currentGameState.isLose()):
-                #print self.evaluationFunction(currentGameState)
-                return self.evaluationFunction(currentGameState) ,None
-            
-            agentIndice = depth % currentGameState.getNumAgents()
-            indice = (currentGameState.getNumAgents() - agentIndice) % currentGameState.getNumAgents()
-            
-            if indice == 0:
-                alpha,a = (-9999999999,None)
-                lista = []
-                el = 0
-                
-                for i in currentGameState.getLegalActions():
-                    el,action = (minimax(currentGameState.generateSuccessor(indice,i),depth-1)[0],i )
-                    
-                    if (alpha < el):
-                        
-                        a = action
-                        alpha = el
-                return alpha,a
-        
-            else:
-                beta,b = (9999999999,None)
-                lista = []
-                el = 0
-                
-                for i in currentGameState.getLegalActions(indice):
-                    el,action = (minimax(currentGameState.generateSuccessor(indice,i),depth-1)[0],i )
-                    
-                    if (beta > el):
-                        b = action
-                        beta = el
-                return beta,b
-            
-        var = minimax(gameState,self.depth * gameState.getNumAgents())
-
-        return var[1]"""
 
         def minimax(currentGameState, depth):
              
@@ -228,33 +185,23 @@ class MinimaxAgent(MultiAgentSearchAgent):
             indice = (currentGameState.getNumAgents() - agentIndice) % currentGameState.getNumAgents()
             
             if indice == 0:
-                value = -9999999999
+                value = -float("inf")
                 lista = {minimax(currentGameState.generateSuccessor(indice,move),depth-1)[0] : move for move in currentGameState.getLegalActions()}
                 
-                #lista = {}
-                
-                #for move in currentGameState.getLegalActions():
-                    #el,action = (minimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
-                    #lista[el] = action
-                x = max(lista.keys())
-                value = max(x,value)
-                #print value,0
+                max_value = max(lista.keys())
+                value = max(max_value,value)
                 return value,lista[value]
             
             else:
-                value = 9999999999
+                value = float("inf")
                 lista = {minimax(currentGameState.generateSuccessor(indice,move),depth-1)[0] : move for move in currentGameState.getLegalActions(indice)}
-                
-                #for move in currentGameState.getLegalActions(indice):
-                    #el,action = (minimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
-                    #lista[el] = action                    
-                x = min(lista.keys())
-                value = min(x,value)
-                #print value,"Not 0"
+                                 
+                min_value = min(lista.keys())
+                value = min(min_value,value)
                 return value,lista[value]
             
-        var = minimax(gameState,self.depth * gameState.getNumAgents())
-        return var[1]
+        min_max = minimax(gameState,self.depth * gameState.getNumAgents())
+        return min_max[1]
         
     
 
@@ -281,14 +228,15 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 lista = {}
                 
                 for move in currentGameState.getLegalActions():
-                    el,action = (poda_alfa_beta(currentGameState.generateSuccessor(indice,move),depth-1,alfa,beta)[0],move)
-                    lista[el] = action
+                    score,action = (poda_alfa_beta(currentGameState.generateSuccessor(indice,move),depth-1,alfa,beta)[0],move)
+                    lista[score] = action
                     value = max(lista.keys())                    
+                    
+                    alfa = max(alfa,value)
                     
                     if (value > beta):
                         return value,lista[value]
-                        
-                    alfa = max(alfa,value)
+                    
                 return value,lista[value]
             
             else:
@@ -296,20 +244,19 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 lista = {}                
                 
                 for move in currentGameState.getLegalActions(indice):
-                    el,action = (poda_alfa_beta(currentGameState.generateSuccessor(indice,move),depth-1,alfa,beta)[0],move)
-                    lista[el] = action                    
+                    score,action = (poda_alfa_beta(currentGameState.generateSuccessor(indice,move),depth-1,alfa,beta)[0],move)
+                    lista[score] = action                    
                     value = min(lista.keys())                 
                     
+                    beta = min(value,beta)
                     
                     if (value < alfa):
                         return value,lista[value]
                      
-                    beta = min(value,beta)
-                    
                 return value,lista[value]
             
-        var = poda_alfa_beta(gameState,self.depth * gameState.getNumAgents(),-float("inf"),float("inf"))
-        return var[1]
+        al_bet = poda_alfa_beta(gameState,self.depth * gameState.getNumAgents(),-float("inf"),float("inf"))
+        return al_bet[1]
 
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
@@ -336,31 +283,27 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             if indice == 0:
                 value = -float("inf")
                 lista = {Expectimax(currentGameState.generateSuccessor(indice,move),depth-1)[0] : move for move in currentGameState.getLegalActions() }
-                
-                """for move in currentGameState.getLegalActions():
-                    el,action = (Expectimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
-                    lista[el] = action
-                
-                """
+
                 value = max(lista.keys()) 
                 return value,lista[value]
             
             else:
                 value = 0
                 numAccions = 0
-                lista = {}                
+                lista = {}
+                
                 
                 for move in currentGameState.getLegalActions(indice):
                     numAccions += 1 
-                    el,action = (Expectimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
-                    value += el
+                    score,action = (Expectimax(currentGameState.generateSuccessor(indice,move),depth-1)[0],move)
+                    value += score
                     
                     lista[value] = action                    
-                    
+           
                 return value/numAccions,lista[value]
             
-        var = Expectimax(gameState,self.depth * gameState.getNumAgents())
-        return var[1]
+        exp = Expectimax(gameState,self.depth * gameState.getNumAgents())
+        return exp[1]
 
 def betterEvaluationFunction(currentGameState):
     """
@@ -370,7 +313,32 @@ def betterEvaluationFunction(currentGameState):
       DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    
+    newPos = currentGameState.getPacmanPosition()
+    newFood = currentGameState.getFood()
+    newGhostStates = currentGameState.getGhostStates()
+    newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
+    
+    foodscor = 0
+    
+    for i in newFood.asList():
+        foodscor=max(foodscor,1/util.manhattanDistance(newPos,i))
+    
+    GhostPos = 0
+    
+    for ghost in currentGameState.getGhostStates():
+        GhostPos = max(GhostPos,util.manhattanDistance(currentGameState.getPacmanPosition(),ghost.getPosition()))
+    
+    coreCapsules = 0
+    for Cap in currentGameState.getCapsules():
+        coreCapsules=max(coreCapsules,1/util.manhattanDistance(Cap,currentGameState.getPacmanPosition()))
+    
+    return currentGameState.getScore() + foodscor - GhostPos + coreCapsules
+    
+    #return 10
+    
+    
 
 # Abbreviation
 better = betterEvaluationFunction
