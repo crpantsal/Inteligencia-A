@@ -57,6 +57,7 @@ class QLearningAgent(ReinforcementAgent):
         """
         "*** YOUR CODE HERE ***"
         #1
+        #iccionario con lista
         if len(self.elements.keys()) == 0:
             self.elements[(state,action)] = 0
             return 0
@@ -82,9 +83,21 @@ class QLearningAgent(ReinforcementAgent):
           terminal state, you should return a value of 0.0.
         """
         "*** YOUR CODE HERE ***"
+        m = 0
+        b = 0
         #1
-        
-        util.raiseNotDefined()
+        for i in self.elements.keys():
+            a = self.elements[i] 
+            l = len(a)
+            if  l > m:
+                m = l
+                b = i
+            elif i[1] == 'exit':
+                return 0
+            
+        return b
+                
+        #util.raiseNotDefined()
 
     def computeActionFromQValues(self, state):
         """
@@ -94,7 +107,18 @@ class QLearningAgent(ReinforcementAgent):
         """
         "*** YOUR CODE HERE ***"
         #1
-        util.raiseNotDefined()
+        for i in self.elements.keys():
+            a = self.elements[i] 
+            l = len(a)
+            if  l > m:
+                m = l
+                b = i
+            elif i[1] == 'exit':
+                return None
+            
+        return self.elements[b]
+        
+        #util.raiseNotDefined()
 
     def getAction(self, state):
         """
@@ -126,7 +150,8 @@ class QLearningAgent(ReinforcementAgent):
         """
         "*** YOUR CODE HERE ***"
         #1
-        util.raiseNotDefined()
+        #util.raiseNotDefined()
+        
 
     def getPolicy(self, state):
         return self.computeActionFromQValues(state)
