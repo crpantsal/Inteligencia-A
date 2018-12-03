@@ -58,7 +58,7 @@ class QLearningAgent(ReinforcementAgent):
         "*** YOUR CODE HERE ***"
         #1
         #iccionario con lista
-        if len(self.elements.keys()) == 0:
+        """if len(self.elements.keys()) == 0:
             self.elements[(state,action)] = 0
             return 0
         elif len(self.elements.keys()) != 0:
@@ -69,11 +69,16 @@ class QLearningAgent(ReinforcementAgent):
                 if self.elements[i] != 0:
                     #return self.elements[i]
                     return i
-        #print (state,action)
+        print (state,action)"""
         
+        #print (state,action)
         #return 0
+        b = {}
+        b[(state)] = (0., action)
+        print b
+        return b[(state)][0]
         #print (type(ReinforcementAgent.getQValue(state,action)))
-
+        #util.raiseNotDefined()
 
     def computeValueFromQValues(self, state):
         """
@@ -83,7 +88,7 @@ class QLearningAgent(ReinforcementAgent):
           terminal state, you should return a value of 0.0.
         """
         "*** YOUR CODE HERE ***"
-        m = 0
+        """"m = 0
         b = 0
         #1
         for i in self.elements.keys():
@@ -95,7 +100,14 @@ class QLearningAgent(ReinforcementAgent):
             elif i[1] == 'exit':
                 return 0
             
-        return b
+        return b"""
+        a = 0
+        for i in b[state]:
+            if i[1] == 'exit'
+                return 0.
+            elif a < i[0]:
+                a = i[0]
+        return a
                 
         #util.raiseNotDefined()
 
@@ -107,7 +119,7 @@ class QLearningAgent(ReinforcementAgent):
         """
         "*** YOUR CODE HERE ***"
         #1
-        for i in self.elements.keys():
+        """for i in self.elements.keys():
             a = self.elements[i] 
             l = len(a)
             if  l > m:
@@ -116,8 +128,18 @@ class QLearningAgent(ReinforcementAgent):
             elif i[1] == 'exit':
                 return None
             
-        return self.elements[b]
-        
+        return self.elements[b]"""
+        #Mirar el exit la coondicion
+        a = 0
+        r = ""
+        for i in b.keys():
+            if b[i][1] == 'exit'
+                return None
+            elif a < b[i][0]:
+                a = b[i][0]
+                r = b[i][1]
+        return a
+    
         #util.raiseNotDefined()
 
     def getAction(self, state):
