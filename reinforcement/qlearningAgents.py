@@ -42,7 +42,7 @@ class QLearningAgent(ReinforcementAgent):
     def __init__(self, **args):
         "You can initialize Q-values here..."
         ReinforcementAgent.__init__(self, **args)
-        self.elements = {}
+        self.b = {}
 
         "*** YOUR CODE HERE ***"
         
@@ -56,27 +56,15 @@ class QLearningAgent(ReinforcementAgent):
           or the Q node value otherwise
         """
         "*** YOUR CODE HERE ***"
-        #1
-        #iccionario con lista
-        """if len(self.elements.keys()) == 0:
-            self.elements[(state,action)] = 0
-            return 0
-        elif len(self.elements.keys()) != 0:
-            for i in self.elements.keys():
-                if self.elements[i] == 0:
-                    self.elements[i] == 1
-                    return 0
-                if self.elements[i] != 0:
-                    #return self.elements[i]
-                    return i
-        print (state,action)"""
-        
-        #print (state,action)
-        #return 0
-        b = {}
-        b[(state)] = (0., action)
-        print b
-        return b[(state)][0]
+         
+        if len(self.b) == 0:
+            self.b[(state)] = []
+            self.b[(state)].append((0., action))
+        else:
+            self.b[(state)] = []
+            self.b[(state)].append((0., action))
+            
+        return self.b[(state)][0][0]
         #print (type(ReinforcementAgent.getQValue(state,action)))
         #util.raiseNotDefined()
 
@@ -88,22 +76,11 @@ class QLearningAgent(ReinforcementAgent):
           terminal state, you should return a value of 0.0.
         """
         "*** YOUR CODE HERE ***"
-        """"m = 0
-        b = 0
-        #1
-        for i in self.elements.keys():
-            a = self.elements[i] 
-            l = len(a)
-            if  l > m:
-                m = l
-                b = i
-            elif i[1] == 'exit':
-                return 0
-            
-        return b"""
+    
         a = 0
-        for i in b[state]:
-            if i[1] == 'exit'
+        for i in self.b[(state)]:
+            print ("I", i)
+            if i[1] == 'exit':
                 return 0.
             elif a < i[0]:
                 a = i[0]
@@ -119,25 +96,16 @@ class QLearningAgent(ReinforcementAgent):
         """
         "*** YOUR CODE HERE ***"
         #1
-        """for i in self.elements.keys():
-            a = self.elements[i] 
-            l = len(a)
-            if  l > m:
-                m = l
-                b = i
-            elif i[1] == 'exit':
-                return None
-            
-        return self.elements[b]"""
+       
         #Mirar el exit la coondicion
         a = 0
         r = ""
-        for i in b.keys():
-            if b[i][1] == 'exit'
+        for i in self.b.keys():
+            if self.b[i][1] == 'exit':
                 return None
-            elif a < b[i][0]:
-                a = b[i][0]
-                r = b[i][1]
+            elif a < self.b[i][0]:
+                a = self.b[i][0]
+                r = self.b[i][1]
         return a
     
         #util.raiseNotDefined()
@@ -157,7 +125,17 @@ class QLearningAgent(ReinforcementAgent):
         legalActions = self.getLegalActions(state)
         action = None
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        #util.raiseNotDefined()
+        for i in self.b.keys():
+            if i == state:
+                r = random.choice(self.b[i])
+                if (util.flipCoin(r[0])):
+                    return r[1]
+                else:
+                    #r[0] = self.epsilon
+                    return r[1]
+            elif self.b[i][1] == 'exit':
+                return None
 
         return action
 
@@ -172,6 +150,8 @@ class QLearningAgent(ReinforcementAgent):
         """
         "*** YOUR CODE HERE ***"
         #1
+        sample = -1 * self.computeValueFromQValues(nextState)  + reward
+        self.b[(nextState)] = (1-0.01) * self.getQValue(state,action) + 0.01 * sample
         #util.raiseNotDefined()
         
 
