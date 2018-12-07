@@ -21,8 +21,9 @@
 
 def question3():
     answerEpsilon = 5
-    answerLearningRate = 0.5
-    return answerEpsilon, answerLearningRate
+    answerLearningRate = 1#alpha
+    #return answerEpsilon, answerLearningRate
+    return 'NOT POSSIBLE'
     # If not possible, return 'NOT POSSIBLE'
 
 if __name__ == '__main__':
