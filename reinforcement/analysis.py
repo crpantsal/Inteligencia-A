@@ -20,8 +20,8 @@
 # value iteration.
 
 def question3():
-    answerEpsilon = None
-    answerLearningRate = None
+    answerEpsilon = 5
+    answerLearningRate = 0.5
     return answerEpsilon, answerLearningRate
     # If not possible, return 'NOT POSSIBLE'
 
