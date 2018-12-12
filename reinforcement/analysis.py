@@ -19,9 +19,14 @@
 # Set the given parameters to obtain the specified policies through
 # value iteration.
 
+
+"""Questio 3 Hem retornat que no es posible degut a que els dos llocs on
+hem d'anar per obtenir la victoria estan masa anyunyats per poder arribar-hi
+la nostra epsilon ha de fer movimenrs random que siguin molt precisos per poder
+arribar-hi y no caigui en las zones de perdues y aixo amb es bastant complex."""
 def question3():
-    answerEpsilon = 5
-    answerLearningRate = 1#alpha
+    answerEpsilon = 0.5
+    answerLearningRate = 0.5#alpha
     #return answerEpsilon, answerLearningRate
     return 'NOT POSSIBLE'
     # If not possible, return 'NOT POSSIBLE'
